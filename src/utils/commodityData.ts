@@ -51,6 +51,7 @@ export const generateCommodities = (): CommodityPrice[] => {
     createCommodity("Ethanol", 1.35, "USD/Gal", CommodityCategory.Energy),
     createCommodity("Carbon", 67.24, "EUR/MT", CommodityCategory.Energy),
     createCommodity("UK Natural Gas", 88.52, "GBp/Thm", CommodityCategory.Energy),
+    createCommodity("TTF Gas", 33.05, "EUR/MWh", CommodityCategory.Energy),
     
     // Metals Commodities
     createCommodity("Gold", 2381.90, "USD/t oz.", CommodityCategory.Metals),
@@ -67,6 +68,8 @@ export const generateCommodities = (): CommodityPrice[] => {
     createCommodity("Tin", 30212.00, "USD/T", CommodityCategory.Metals),
     createCommodity("Lithium", 139000.00, "CNY/T", CommodityCategory.Metals),
     createCommodity("Uranium", 90.25, "USD/Lbs", CommodityCategory.Metals),
+    createCommodity("Cobalt", 34200.00, "USD/T", CommodityCategory.Metals),
+    createCommodity("Molybdenum", 27.38, "USD/Lbs", CommodityCategory.Metals),
     
     // Agriculture Commodities
     createCommodity("Wheat", 604.00, "USd/Bu", CommodityCategory.Agriculture),
@@ -80,12 +83,17 @@ export const generateCommodities = (): CommodityPrice[] => {
     createCommodity("Canola", 714.80, "CAD/T", CommodityCategory.Agriculture),
     createCommodity("London Wheat", 203.10, "GBP/MT", CommodityCategory.Agriculture),
     createCommodity("Rapeseed", 502.75, "EUR/T", CommodityCategory.Agriculture),
-
+    createCommodity("Rough Rice", 16.12, "USD/cwt", CommodityCategory.Agriculture),
+    createCommodity("Feed Wheat", 225.00, "GBP/T", CommodityCategory.Agriculture),
+    createCommodity("Hard Red Wheat", 694.25, "USd/Bu", CommodityCategory.Agriculture),
+    
     // Livestock Commodities
     createCommodity("Live Cattle", 187.38, "USd/Lbs", CommodityCategory.Livestock),
     createCommodity("Feeder Cattle", 257.72, "USd/Lbs", CommodityCategory.Livestock),
     createCommodity("Lean Hogs", 94.85, "USd/Lbs", CommodityCategory.Livestock),
     createCommodity("Class III Milk", 19.95, "USD/cwt", CommodityCategory.Livestock),
+    createCommodity("Live Hogs", 19883.00, "CNY/T", CommodityCategory.Livestock),
+    createCommodity("Live Pork Bellies", 162.95, "USd/Lbs", CommodityCategory.Livestock),
     
     // Softs Commodities
     createCommodity("Coffee", 2.24, "USD/Lbs", CommodityCategory.Softs),
@@ -95,10 +103,17 @@ export const generateCommodities = (): CommodityPrice[] => {
     createCommodity("Cotton", 80.10, "USd/Lbs", CommodityCategory.Softs),
     createCommodity("Lumber", 565.00, "USD/1000 bd ft", CommodityCategory.Softs),
     createCommodity("Rubber", 1.79, "USD/Kg", CommodityCategory.Softs),
+    createCommodity("London Robusta Coffee", 3883.00, "USD/T", CommodityCategory.Softs),
+    createCommodity("London Sugar", 481.00, "USD/T", CommodityCategory.Softs),
+    createCommodity("London Cocoa", 6503.00, "GBP/T", CommodityCategory.Softs),
     
     // Indices Commodities
     createCommodity("Commodity Index", 326.44, "Index Points", CommodityCategory.Indices),
     createCommodity("Gold Miners ETF", 33.24, "USD", CommodityCategory.Indices),
-    createCommodity("USD Index", 104.00, "Index Points", CommodityCategory.Indices)
+    createCommodity("USD Index", 104.00, "Index Points", CommodityCategory.Indices),
+    createCommodity("S&P GSCI", 631.32, "Index Points", CommodityCategory.Indices),
+    createCommodity("Rogers Intl", 2786.91, "Index Points", CommodityCategory.Indices),
+    createCommodity("DJ Commodity", 454.81, "Index Points", CommodityCategory.Indices),
+    createCommodity("MSCI World Commodity Producers", 392.93, "Index Points", CommodityCategory.Indices)
   ];
 };
