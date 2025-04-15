@@ -18,7 +18,7 @@ const Index = () => {
   // Fetch commodity prices on component mount
   useEffect(() => {
     fetchPrices();
-  }, []);
+  }, [selectedCategory]); // Add selectedCategory as a dependency
 
   // Function to fetch prices based on selected category
   const fetchPrices = async () => {
@@ -46,14 +46,7 @@ const Index = () => {
   // Handle tab change
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
-    
-    // If changing to a different category, refetch prices
-    if (value !== selectedCategory) {
-      setIsLoading(true);
-      setTimeout(() => {
-        fetchPrices();
-      }, 100);
-    }
+    // Remove the fetchPrices call here since it will be triggered by the useEffect
   };
 
   // Handle manual refresh
