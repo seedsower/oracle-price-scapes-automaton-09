@@ -14,6 +14,9 @@ export enum CommodityCategory {
   Energy = "Energy",
   Metals = "Metals",
   Agriculture = "Agriculture",
+  Livestock = "Livestock",
+  Softs = "Softs",
+  Indices = "Indices",
 }
 
 export interface OracleData {

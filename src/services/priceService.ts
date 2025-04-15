@@ -1,6 +1,6 @@
-
 import { CommodityCategory, CommodityPrice, OracleData, OracleStatus, PriceHistory } from "@/types";
-import { mockCommodities, mockOracles, mockPriceHistory } from "@/utils/mockData";
+import { mockOracles, mockPriceHistory } from "@/utils/mockData";
+import { generateCommodities } from "@/utils/commodityData";
 import { toast } from "@/components/ui/use-toast";
 
 // Simulate API call delays
@@ -10,14 +10,107 @@ const simulateAPIDelay = () => new Promise(resolve => setTimeout(resolve, 800 + 
  * Service to fetch and manage price data
  */
 class PriceService {
-  private commodities: CommodityPrice[] = [...mockCommodities];
+  private commodities: CommodityPrice[] = [];
   private oracles: OracleData[] = [...mockOracles];
   private priceHistory: PriceHistory[] = [...mockPriceHistory];
   private updateInterval: NodeJS.Timeout | null = null;
   private lastScraped: Date = new Date();
 
   constructor() {
-    // Initialize with mock data
+    // Initialize with comprehensive commodity data
+    this.commodities = generateCommodities();
+    
+    // Update oracles to match the new commodities
+    this.syncOraclesWithCommodities();
+    
+    // Initialize price history for all commodities
+    this.initializePriceHistory();
+  }
+
+  /**
+   * Sync oracles with commodities
+   */
+  private syncOraclesWithCommodities() {
+    // Keep existing oracles for commodities that still exist
+    const existingOraclesByCommodityId = new Map(
+      this.oracles.map(oracle => [oracle.commodityId, oracle])
+    );
+    
+    // Create new oracles array with updated and new oracles
+    this.oracles = this.commodities.map(commodity => {
+      const existingOracle = existingOraclesByCommodityId.get(commodity.id);
+      
+      if (existingOracle) {
+        // Update existing oracle with latest price
+        return {
+          ...existingOracle,
+          latestPrice: commodity.price
+        };
+      }
+      
+      // Create new oracle for this commodity
+      const now = new Date();
+      const nextUpdateTime = new Date(now.getTime() + 6 * 60 * 60 * 1000); // 6 hours later
+      
+      return {
+        id: `oracle-${commodity.id}`,
+        commodityId: commodity.id,
+        latestPrice: commodity.price,
+        lastUpdated: now.toISOString(),
+        nextUpdateTime: nextUpdateTime.toISOString(),
+        status: OracleStatus.Active,
+        network: Math.random() > 0.5 ? "Ethereum" : "Polygon",
+        address: `0x${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
+        transactions: [
+          {
+            txHash: `0x${Math.random().toString(16).substring(2, 66)}`,
+            timestamp: now.toISOString(),
+            newPrice: commodity.price,
+            oldPrice: 0,
+            blockNumber: 16000000 + Math.floor(Math.random() * 1000000),
+            gasUsed: Math.floor(Math.random() * 100000) + 50000,
+          }
+        ]
+      };
+    });
+  }
+
+  /**
+   * Initialize price history for all commodities
+   */
+  private initializePriceHistory() {
+    const existingHistoryByCommodityId = new Map(
+      this.priceHistory.map(history => [history.commodityId, history])
+    );
+    
+    this.priceHistory = this.commodities.map(commodity => {
+      const existingHistory = existingHistoryByCommodityId.get(commodity.id);
+      
+      if (existingHistory) {
+        return existingHistory;
+      }
+      
+      // Generate 24 hours of mock history data
+      const timestamps: string[] = [];
+      const prices: number[] = [];
+      const now = new Date();
+      
+      for (let i = 23; i >= 0; i--) {
+        const time = new Date(now.getTime() - i * 60 * 60 * 1000); // hourly data points
+        timestamps.push(time.toISOString());
+        
+        // Generate price with some randomness around the current price
+        const randomFactor = 0.98 + Math.random() * 0.04; // 98% to 102% of current price
+        prices.push(parseFloat((commodity.price * randomFactor).toFixed(2)));
+      }
+      
+      return {
+        id: `history-${commodity.id}`,
+        commodityId: commodity.id,
+        timestamps,
+        prices
+      };
+    });
   }
 
   /**

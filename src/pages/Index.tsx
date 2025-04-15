@@ -133,11 +133,14 @@ const Index = () => {
           onValueChange={handleCategoryChange}
           className="w-full"
         >
-          <TabsList className="mb-4">
+          <TabsList className="mb-4 flex flex-wrap">
             <TabsTrigger value="all">All Commodities</TabsTrigger>
             <TabsTrigger value={CommodityCategory.Energy}>Energy</TabsTrigger>
             <TabsTrigger value={CommodityCategory.Metals}>Metals</TabsTrigger>
             <TabsTrigger value={CommodityCategory.Agriculture}>Agriculture</TabsTrigger>
+            <TabsTrigger value={CommodityCategory.Livestock}>Livestock</TabsTrigger>
+            <TabsTrigger value={CommodityCategory.Softs}>Softs</TabsTrigger>
+            <TabsTrigger value={CommodityCategory.Indices}>Indices</TabsTrigger>
           </TabsList>
 
           <TabsContent value={selectedCategory} className="mt-0">
@@ -146,7 +149,7 @@ const Index = () => {
                 <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {commodities.map((commodity) => (
                   <PriceCard key={commodity.id} commodity={commodity} />
                 ))}
