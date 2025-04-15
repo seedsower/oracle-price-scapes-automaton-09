@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { CommodityCategory, CommodityPrice } from "@/types";
 import { PriceCard } from "@/components/PriceCard";
@@ -15,10 +14,10 @@ const Index = () => {
   const [autoUpdateActive, setAutoUpdateActive] = useState<boolean>(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  // Fetch commodity prices on component mount
+  // Fetch commodity prices when component mounts or category changes
   useEffect(() => {
     fetchPrices();
-  }, []);
+  }, [selectedCategory]);
 
   // Function to fetch prices based on selected category
   const fetchPrices = async () => {
@@ -46,14 +45,6 @@ const Index = () => {
   // Handle tab change
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
-    
-    // If changing to a different category, refetch prices
-    if (value !== selectedCategory) {
-      setIsLoading(true);
-      setTimeout(() => {
-        fetchPrices();
-      }, 100);
-    }
   };
 
   // Handle manual refresh
