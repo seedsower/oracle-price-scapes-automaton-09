@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { CommodityCategory, CommodityPrice } from "@/types";
 import { PriceCard } from "@/components/PriceCard";
+import { WalletConnection } from "@/components/WalletConnection";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { priceService } from "@/services/priceService";
@@ -81,7 +82,7 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+            <div className="flex flex-col space-y-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0 lg:items-center">
               <div className="flex gap-2">
                 <Button 
                   onClick={handleRefresh} 
@@ -105,12 +106,15 @@ const Index = () => {
                   {autoUpdateActive ? "Stop Auto-Updates" : "Start Auto-Updates"}
                 </Button>
               </div>
-              
-              {lastUpdated && (
-                <div className="text-sm text-muted-foreground">
-                  Last updated: {lastUpdated.toLocaleString()}
-                </div>
-              )}
+
+              <div className="flex flex-col space-y-2 sm:items-end">
+                <WalletConnection />
+                {lastUpdated && (
+                  <div className="text-sm text-muted-foreground">
+                    Last updated: {lastUpdated.toLocaleString()}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
