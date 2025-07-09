@@ -21,41 +21,19 @@ export function PriceCard({ commodity, showDetails = true }: PriceCardProps) {
   
   // Mock token data - in real implementation, this would come from API
   const getTokenInfo = (commodityId: string) => {
-    const mockTokens: Record<string, { 
-      ethereum: { available: boolean; tokenPrice: number; symbol: string };
-      solana: { available: boolean; tokenPrice: number; symbol: string };
-    }> = {
-      'crude-oil': { 
-        ethereum: { available: true, tokenPrice: 72.45, symbol: 'tOIL' },
-        solana: { available: true, tokenPrice: 72.52, symbol: 'SOL-OIL' }
-      },
-      'gold': { 
-        ethereum: { available: true, tokenPrice: 2031.50, symbol: 'tGLD' },
-        solana: { available: true, tokenPrice: 2032.10, symbol: 'SOL-GLD' }
-      },
-      'silver': { 
-        ethereum: { available: true, tokenPrice: 23.85, symbol: 'tSLV' },
-        solana: { available: false, tokenPrice: 0, symbol: 'SOL-SLV' }
-      },
-      'wheat': { 
-        ethereum: { available: false, tokenPrice: 0, symbol: 'tWHT' },
-        solana: { available: true, tokenPrice: 5.87, symbol: 'SOL-WHT' }
-      },
-      'corn': { 
-        ethereum: { available: true, tokenPrice: 4.32, symbol: 'tCRN' },
-        solana: { available: true, tokenPrice: 4.35, symbol: 'SOL-CRN' }
-      },
+    const mockTokens: Record<string, { available: boolean; tokenPrice: number; symbol: string }> = {
+      'crude-oil': { available: true, tokenPrice: 72.45, symbol: 'tOIL' },
+      'gold': { available: true, tokenPrice: 2031.50, symbol: 'tGLD' },
+      'silver': { available: true, tokenPrice: 23.85, symbol: 'tSLV' },
+      'wheat': { available: false, tokenPrice: 0, symbol: 'tWHT' },
+      'corn': { available: true, tokenPrice: 4.32, symbol: 'tCRN' },
     };
-    return mockTokens[commodityId] || { 
-      ethereum: { available: false, tokenPrice: 0, symbol: 'tTKN' },
-      solana: { available: false, tokenPrice: 0, symbol: 'SOL-TKN' }
-    };
+    return mockTokens[commodityId] || { available: false, tokenPrice: 0, symbol: 'tTKN' };
   };
   
   const tokenInfo = getTokenInfo(id);
-  const ethTokenAvailable = tokenInfo.ethereum.available;
-  const solTokenAvailable = tokenInfo.solana.available;
-  const anyTokenAvailable = ethTokenAvailable || solTokenAvailable;
+  const tokenPriceDiff = tokenInfo.tokenPrice - price;
+  const tokenPriceDiffPercent = tokenInfo.tokenPrice > 0 ? ((tokenPriceDiff / price) * 100) : 0;
   
   return (
     <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
@@ -95,49 +73,37 @@ export function PriceCard({ commodity, showDetails = true }: PriceCardProps) {
           </div>
           
           {/* Token Information */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <CoinsIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Tokens</span>
+                <span className="text-sm font-medium">Token</span>
                 <Badge 
-                  variant={anyTokenAvailable ? "default" : "secondary"}
+                  variant={tokenInfo.available ? "default" : "secondary"}
                   className="text-xs"
                 >
-                  {anyTokenAvailable ? "Available" : "Coming Soon"}
+                  {tokenInfo.available ? "Available" : "Coming Soon"}
                 </Badge>
               </div>
+              <span className="text-sm text-muted-foreground">{tokenInfo.symbol}</span>
             </div>
             
-            {/* Ethereum Tokens */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Ethereum (Base):</span>
+            {tokenInfo.available && (
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Token Price:</span>
                 <div className="flex items-center gap-1">
-                  <Badge variant={ethTokenAvailable ? "outline" : "secondary"} className="text-xs">
-                    {tokenInfo.ethereum.symbol}
-                  </Badge>
-                  {ethTokenAvailable && (
-                    <span className="font-medium">${tokenInfo.ethereum.tokenPrice}</span>
-                  )}
+                  <span className="font-medium">{tokenInfo.tokenPrice}</span>
+                  <span 
+                    className={cn(
+                      "text-xs",
+                      tokenPriceDiff >= 0 ? "text-success" : "text-destructive"
+                    )}
+                  >
+                    ({tokenPriceDiff >= 0 ? "+" : ""}{tokenPriceDiffPercent.toFixed(2)}%)
+                  </span>
                 </div>
               </div>
-            </div>
-            
-            {/* Solana Tokens */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Solana:</span>
-                <div className="flex items-center gap-1">
-                  <Badge variant={solTokenAvailable ? "outline" : "secondary"} className="text-xs">
-                    {tokenInfo.solana.symbol}
-                  </Badge>
-                  {solTokenAvailable && (
-                    <span className="font-medium">${tokenInfo.solana.tokenPrice}</span>
-                  )}
-                </div>
-              </div>
-            </div>
+            )}
           </div>
           
           <div className="text-xs text-muted-foreground">
@@ -159,14 +125,14 @@ export function PriceCard({ commodity, showDetails = true }: PriceCardProps) {
               View Oracle Details
             </Button>
             <Button 
-              variant={anyTokenAvailable ? "default" : "secondary"}
+              variant={tokenInfo.available ? "default" : "secondary"}
               size="sm" 
               className="flex-1 justify-center gap-2 text-xs"
-              disabled={!anyTokenAvailable}
-              onClick={() => console.log(`Tokenize ${name} on multiple chains`)} // TODO: Implement multi-chain tokenization
+              disabled={!tokenInfo.available}
+              onClick={() => console.log(`Tokenize ${name}`)} // TODO: Implement tokenization
             >
               <CoinsIcon className="h-3.5 w-3.5" />
-              {anyTokenAvailable ? "Tokenize" : "Coming Soon"}
+              {tokenInfo.available ? "Tokenize" : "Coming Soon"}
             </Button>
           </div>
         </CardFooter>
