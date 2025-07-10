@@ -9,6 +9,7 @@ import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { SOLANA_RPC_ENDPOINT, useSolanaWallets } from './lib/solana';
 import Index from "./pages/Index";
+import Portfolio from "./pages/Portfolio";
 import NotFound from "./pages/NotFound";
 import CommodityDetail from "./pages/CommodityDetail";
 
@@ -32,6 +33,7 @@ const AppContent = () => {
                 <BrowserRouter>
                   <Routes>
                     <Route path="/" element={<Index />} />
+                    <Route path="/portfolio" element={<Portfolio />} />
                     <Route path="/commodity/:id" element={<CommodityDetail />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />

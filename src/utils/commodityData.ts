@@ -21,19 +21,23 @@ const createCommodity = (
   name: string,
   price: number,
   unit: string,
-  category: CommodityCategory
+  category: CommodityCategory,
+  ticker?: string,
+  contractAddresses?: { base?: string; solana?: string }
 ): CommodityPrice => {
   const { change, changePercent } = generateRandomChange(price);
   
   return {
     id: generateId(),
     name,
+    ticker,
     price,
     unit,
     change,
     changePercent,
     lastUpdate: new Date().toISOString(),
     category,
+    contractAddresses,
   };
 };
 
@@ -96,8 +100,10 @@ export const generateCommodities = (): CommodityPrice[] => {
     createCommodity("Live Pork Bellies", 162.95, "USd/Lbs", CommodityCategory.Livestock),
     
     // Softs Commodities
-    createCommodity("Coffee", 2.24, "USD/Lbs", CommodityCategory.Softs),
-    createCommodity("Cocoa", 10084.00, "USD/T", CommodityCategory.Softs),
+    createCommodity("Coffee", 2.24, "USD/Lbs", CommodityCategory.Softs, "COF"),
+    createCommodity("Cocoa", 10084.00, "USD/T", CommodityCategory.Softs, "COA", {
+      base: "0x7D8466C9737A21092d545BEDd5aBc702f7dE9353"
+    }),
     createCommodity("Sugar", 19.99, "USd/Lbs", CommodityCategory.Softs),
     createCommodity("Orange Juice", 408.50, "USd/Lbs", CommodityCategory.Softs),
     createCommodity("Cotton", 80.10, "USd/Lbs", CommodityCategory.Softs),

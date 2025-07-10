@@ -14,7 +14,7 @@ interface PriceCardProps {
 
 export function PriceCard({ commodity, showDetails = true }: PriceCardProps) {
   const navigate = useNavigate();
-  const { id, name, price, unit, change, changePercent, lastUpdate, category } = commodity;
+  const { id, name, ticker, price, unit, change, changePercent, lastUpdate, category, contractAddresses } = commodity;
   
   const formattedDate = new Date(lastUpdate).toLocaleString();
   const isPositive = change >= 0;
@@ -53,18 +53,25 @@ export function PriceCard({ commodity, showDetails = true }: PriceCardProps) {
   };
   
   const tokenInfo = getTokenInfo(id);
-  const ethTokenAvailable = tokenInfo.ethereum.available;
-  const solTokenAvailable = tokenInfo.solana.available;
+  const ethTokenAvailable = tokenInfo.ethereum.available || !!contractAddresses?.base;
+  const solTokenAvailable = tokenInfo.solana.available || !!contractAddresses?.solana;
   const anyTokenAvailable = ethTokenAvailable || solTokenAvailable;
   
   return (
     <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
       <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-lg md:text-xl">{name}</CardTitle>
-            <CardDescription>{category}</CardDescription>
-          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-lg md:text-xl">{name}</CardTitle>
+                {ticker && (
+                  <Badge variant="outline" className="text-xs">
+                    {ticker}
+                  </Badge>
+                )}
+              </div>
+              <CardDescription>{category}</CardDescription>
+            </div>
           <div className="rounded-full bg-muted p-1.5">
             <BarChart3Icon className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -112,13 +119,15 @@ export function PriceCard({ commodity, showDetails = true }: PriceCardProps) {
             {/* Ethereum Tokens */}
             <div className="space-y-1">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Ethereum (Base):</span>
+                <span className="text-muted-foreground">Base Network:</span>
                 <div className="flex items-center gap-1">
-                  <Badge variant={ethTokenAvailable ? "outline" : "secondary"} className="text-xs">
-                    {tokenInfo.ethereum.symbol}
+                  <Badge variant={contractAddresses?.base ? "default" : "secondary"} className="text-xs">
+                    {ticker || 'TKN'}
                   </Badge>
-                  {ethTokenAvailable && (
-                    <span className="font-medium">${tokenInfo.ethereum.tokenPrice}</span>
+                  {contractAddresses?.base && (
+                    <span className="font-mono text-[10px]">
+                      {contractAddresses.base.slice(0, 6)}...{contractAddresses.base.slice(-4)}
+                    </span>
                   )}
                 </div>
               </div>
@@ -129,11 +138,13 @@ export function PriceCard({ commodity, showDetails = true }: PriceCardProps) {
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">Solana:</span>
                 <div className="flex items-center gap-1">
-                  <Badge variant={solTokenAvailable ? "outline" : "secondary"} className="text-xs">
-                    {tokenInfo.solana.symbol}
+                  <Badge variant={contractAddresses?.solana ? "default" : "secondary"} className="text-xs">
+                    SOL-{ticker || 'TKN'}
                   </Badge>
-                  {solTokenAvailable && (
-                    <span className="font-medium">${tokenInfo.solana.tokenPrice}</span>
+                  {contractAddresses?.solana && (
+                    <span className="font-mono text-[10px]">
+                      {contractAddresses.solana.slice(0, 6)}...{contractAddresses.solana.slice(-4)}
+                    </span>
                   )}
                 </div>
               </div>

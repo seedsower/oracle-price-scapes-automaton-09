@@ -2,12 +2,17 @@
 export interface CommodityPrice {
   id: string;
   name: string;
+  ticker?: string;
   price: number;
   unit: string;
   change: number;
   changePercent: number;
   lastUpdate: string;
   category: CommodityCategory;
+  contractAddresses?: {
+    base?: string;
+    solana?: string;
+  };
 }
 
 export enum CommodityCategory {
@@ -51,4 +56,27 @@ export interface PriceHistory {
   commodityId: string;
   timestamps: string[];
   prices: number[];
+}
+
+export interface TokenPosition {
+  id: string;
+  commodityId: string;
+  commodityName: string;
+  ticker: string;
+  network: 'base' | 'solana';
+  contractAddress: string;
+  balance: number;
+  purchasePrice: number;
+  currentPrice: number;
+  profitLoss: number;
+  profitLossPercent: number;
+  value: number;
+  purchaseDate: string;
+}
+
+export interface Portfolio {
+  totalValue: number;
+  totalProfitLoss: number;
+  totalProfitLossPercent: number;
+  positions: TokenPosition[];
 }

@@ -5,9 +5,11 @@ import { WalletConnection } from "@/components/WalletConnection";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { priceService } from "@/services/priceService";
-import { Loader2Icon, RefreshCwIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Loader2Icon, RefreshCwIcon, FolderIcon } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [commodities, setCommodities] = useState<CommodityPrice[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -108,7 +110,17 @@ const Index = () => {
               </div>
 
               <div className="flex flex-col space-y-2 sm:items-end">
-                <WalletConnection />
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => navigate('/portfolio')} 
+                    variant="outline" 
+                    className="gap-2"
+                  >
+                    <FolderIcon className="h-4 w-4" />
+                    Portfolio
+                  </Button>
+                  <WalletConnection />
+                </div>
                 {lastUpdated && (
                   <div className="text-sm text-muted-foreground">
                     Last updated: {lastUpdated.toLocaleString()}
