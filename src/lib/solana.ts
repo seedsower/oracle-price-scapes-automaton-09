@@ -6,17 +6,18 @@ import {
   TorusWalletAdapter,
   LedgerWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { Connection, clusterApiUrl } from '@solana/web3.js';
 import { useMemo } from 'react';
 
 // Default to devnet for development
-export const SOLANA_NETWORK = 'devnet';
-export const SOLANA_RPC_ENDPOINT = clusterApiUrl(SOLANA_NETWORK);
+export const SOLANA_NETWORK = WalletAdapterNetwork.Devnet;
+export const SOLANA_RPC_ENDPOINT = clusterApiUrl('devnet');
 
 export const useSolanaWallets = () => {
   return useMemo(() => [
     new PhantomWalletAdapter(),
-    new SolflareWalletAdapter(),
+    new SolflareWalletAdapter({ network: SOLANA_NETWORK }),
     new TorusWalletAdapter(),
     new LedgerWalletAdapter(),
   ], []);
