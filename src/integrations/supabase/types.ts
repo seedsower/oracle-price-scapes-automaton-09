@@ -16,31 +16,46 @@ export type Database = {
     Tables: {
       commodity_tokens: {
         Row: {
+          aerodrome_pool_address: string | null
           blockchain: string
           contract_address: string
           created_at: string
+          daily_volume_usd: number | null
           decimals: number | null
           id: string
+          is_active: boolean | null
+          jupiter_mint_address: string | null
+          liquidity_usd: number | null
           name: string
           symbol: string
           ticker: string
         }
         Insert: {
+          aerodrome_pool_address?: string | null
           blockchain?: string
           contract_address: string
           created_at?: string
+          daily_volume_usd?: number | null
           decimals?: number | null
           id?: string
+          is_active?: boolean | null
+          jupiter_mint_address?: string | null
+          liquidity_usd?: number | null
           name: string
           symbol: string
           ticker: string
         }
         Update: {
+          aerodrome_pool_address?: string | null
           blockchain?: string
           contract_address?: string
           created_at?: string
+          daily_volume_usd?: number | null
           decimals?: number | null
           id?: string
+          is_active?: boolean | null
+          jupiter_mint_address?: string | null
+          liquidity_usd?: number | null
           name?: string
           symbol?: string
           ticker?: string
@@ -148,7 +163,26 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      dex_trading_pairs: {
+        Row: {
+          aerodrome_pool_address: string | null
+          base_name: string | null
+          base_symbol: string | null
+          base_token_id: string | null
+          blockchain: string | null
+          contract_address: string | null
+          daily_volume_usd: number | null
+          is_active: boolean | null
+          jupiter_mint_address: string | null
+          liquidity_usd: number | null
+          pair_blockchain: string | null
+          pair_contract_address: string | null
+          pair_symbol: string | null
+          pair_token_id: string | null
+          ticker: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

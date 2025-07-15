@@ -45,9 +45,9 @@ const createCommodity = (
 export const generateCommodities = (): CommodityPrice[] => {
   return [
     // Energy Commodities
-    createCommodity("Crude Oil", 82.79, "USD/Bbl", CommodityCategory.Energy),
-    createCommodity("Brent Oil", 84.91, "USD/Bbl", CommodityCategory.Energy),
-    createCommodity("Natural Gas", 2.10, "USD/MMBtu", CommodityCategory.Energy),
+    createCommodity("Crude Oil", 82.79, "USD/Bbl", CommodityCategory.Energy, "CL"),
+    createCommodity("Brent Oil", 84.91, "USD/Bbl", CommodityCategory.Energy, "BZ"),
+    createCommodity("Natural Gas", 2.10, "USD/MMBtu", CommodityCategory.Energy, "NG"),
     createCommodity("Heating Oil", 2.64, "USD/Gal", CommodityCategory.Energy),
     createCommodity("Gasoline", 2.43, "USD/Gal", CommodityCategory.Energy),
     createCommodity("London Gas Oil", 735.38, "USD/MT", CommodityCategory.Energy),
@@ -58,11 +58,11 @@ export const generateCommodities = (): CommodityPrice[] => {
     createCommodity("TTF Gas", 33.05, "EUR/MWh", CommodityCategory.Energy),
     
     // Metals Commodities
-    createCommodity("Gold", 2381.90, "USD/t oz.", CommodityCategory.Metals),
-    createCommodity("Silver", 28.14, "USD/t oz.", CommodityCategory.Metals),
-    createCommodity("Platinum", 943.80, "USD/t oz.", CommodityCategory.Metals),
-    createCommodity("Palladium", 1018.94, "USD/t oz.", CommodityCategory.Metals),
-    createCommodity("Copper", 4.58, "USD/Lbs", CommodityCategory.Metals),
+    createCommodity("Gold", 2381.90, "USD/t oz.", CommodityCategory.Metals, "GC"),
+    createCommodity("Silver", 28.14, "USD/t oz.", CommodityCategory.Metals, "SI"),
+    createCommodity("Platinum", 943.80, "USD/t oz.", CommodityCategory.Metals, "PL"),
+    createCommodity("Palladium", 1018.94, "USD/t oz.", CommodityCategory.Metals, "PA"),
+    createCommodity("Copper", 4.58, "USD/Lbs", CommodityCategory.Metals, "HG"),
     createCommodity("Aluminum", 2394.75, "USD/T", CommodityCategory.Metals),
     createCommodity("Zinc", 2756.50, "USD/T", CommodityCategory.Metals),
     createCommodity("Nickel", 19046.00, "USD/T", CommodityCategory.Metals),
@@ -76,9 +76,9 @@ export const generateCommodities = (): CommodityPrice[] => {
     createCommodity("Molybdenum", 27.38, "USD/Lbs", CommodityCategory.Metals),
     
     // Agriculture Commodities
-    createCommodity("Wheat", 604.00, "USd/Bu", CommodityCategory.Agriculture),
-    createCommodity("Corn", 457.75, "USd/Bu", CommodityCategory.Agriculture),
-    createCommodity("Soybeans", 1203.50, "USd/Bu", CommodityCategory.Agriculture),
+    createCommodity("Wheat", 604.00, "USd/Bu", CommodityCategory.Agriculture, "ZW"),
+    createCommodity("Corn", 457.75, "USd/Bu", CommodityCategory.Agriculture, "ZC"),
+    createCommodity("Soybeans", 1203.50, "USd/Bu", CommodityCategory.Agriculture, "ZS"),
     createCommodity("Rice", 17.01, "USD/cwt", CommodityCategory.Agriculture),
     createCommodity("Oats", 381.00, "USd/Bu", CommodityCategory.Agriculture),
     createCommodity("Soybean Oil", 49.71, "USd/Lbs", CommodityCategory.Agriculture),
@@ -100,13 +100,13 @@ export const generateCommodities = (): CommodityPrice[] => {
     createCommodity("Live Pork Bellies", 162.95, "USd/Lbs", CommodityCategory.Livestock),
     
     // Softs Commodities
-    createCommodity("Coffee", 2.24, "USD/Lbs", CommodityCategory.Softs, "COF"),
-    createCommodity("Cocoa", 10084.00, "USD/T", CommodityCategory.Softs, "COA", {
+    createCommodity("Coffee", 2.24, "USD/Lbs", CommodityCategory.Softs, "KC"),
+    createCommodity("Cocoa", 10084.00, "USD/T", CommodityCategory.Softs, "CC", {
       base: "0x7D8466C9737A21092d545BEDd5aBc702f7dE9353"
     }),
-    createCommodity("Sugar", 19.99, "USd/Lbs", CommodityCategory.Softs),
-    createCommodity("Orange Juice", 408.50, "USd/Lbs", CommodityCategory.Softs),
-    createCommodity("Cotton", 80.10, "USd/Lbs", CommodityCategory.Softs),
+    createCommodity("Sugar", 19.99, "USd/Lbs", CommodityCategory.Softs, "SB"),
+    createCommodity("Orange Juice", 408.50, "USd/Lbs", CommodityCategory.Softs, "OJ"),
+    createCommodity("Cotton", 80.10, "USd/Lbs", CommodityCategory.Softs, "CT"),
     createCommodity("Lumber", 565.00, "USD/1000 bd ft", CommodityCategory.Softs),
     createCommodity("Rubber", 1.79, "USD/Kg", CommodityCategory.Softs),
     createCommodity("London Robusta Coffee", 3883.00, "USD/T", CommodityCategory.Softs),

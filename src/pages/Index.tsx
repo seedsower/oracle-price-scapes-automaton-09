@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
 import { CommodityCategory, CommodityPrice } from "@/types";
-import { PriceCard } from "@/components/PriceCard";
+import { PriceChart } from "@/components/PriceChart";
+import { TradingCard } from "@/components/TradingCard";
+import { ArbitrageOpportunities } from "@/components/ArbitrageOpportunities";
+import { OracleStatus } from "@/components/OracleStatus";
 import { WalletConnection } from "@/components/WalletConnection";
+import { priceService } from "@/services/priceService";
+import { dexService } from "@/services/dexService";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { priceService } from "@/services/priceService";
-import { useNavigate } from "react-router-dom";
 import { Loader2Icon, RefreshCwIcon, FolderIcon } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
   const [commodities, setCommodities] = useState<CommodityPrice[]>([]);
+  const [tradingPairs, setTradingPairs] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -20,6 +25,7 @@ const Index = () => {
   // Fetch commodity prices when component mounts or category changes
   useEffect(() => {
     fetchPrices();
+    fetchTradingPairs();
   }, [selectedCategory]);
 
   // Function to fetch prices based on selected category
@@ -45,6 +51,15 @@ const Index = () => {
     }
   };
 
+  const fetchTradingPairs = async () => {
+    try {
+      const pairs = await dexService.getTradingPairs();
+      setTradingPairs(pairs);
+    } catch (error) {
+      console.error("Error fetching trading pairs:", error);
+    }
+  };
+
   // Handle tab change
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
@@ -52,11 +67,17 @@ const Index = () => {
 
   // Handle manual refresh
   const handleRefresh = async () => {
-    setIsRefreshing(true);
-    await priceService.scrapePrices();
-    await priceService.updateOracles();
-    await fetchPrices();
-    setIsRefreshing(false);
+    try {
+      setIsRefreshing(true);
+      await priceService.scrapePrices();
+      await priceService.updateOracles();
+      await fetchPrices();
+      await fetchTradingPairs();
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   // Toggle automatic updates
@@ -77,10 +98,9 @@ const Index = () => {
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col space-y-4">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold sm:text-4xl">Oracle Price Feed</h1>
+              <h1 className="text-3xl font-bold sm:text-4xl">Synthetic Commodities DEX</h1>
               <p className="max-w-3xl text-muted-foreground">
-                Real-time commodity prices scraped from Trading Economics and synchronized 
-                with blockchain oracles every 6 hours.
+                Trade synthetic commodity tokens on Base (Aerodrome) and Solana (Jupiter) with real-time arbitrage opportunities.
               </p>
             </div>
 
@@ -97,7 +117,7 @@ const Index = () => {
                   ) : (
                     <RefreshCwIcon className="h-4 w-4" />
                   )}
-                  Refresh Prices
+                  Refresh Markets
                 </Button>
                 
                 <Button 
@@ -119,7 +139,6 @@ const Index = () => {
                     <FolderIcon className="h-4 w-4" />
                     Portfolio
                   </Button>
-                  <WalletConnection />
                 </div>
                 {lastUpdated && (
                   <div className="text-sm text-muted-foreground">
@@ -134,32 +153,71 @@ const Index = () => {
 
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-4 py-6">
-        <Tabs 
-          defaultValue="all" 
-          value={selectedCategory} 
-          onValueChange={handleCategoryChange}
-          className="w-full"
-        >
-          <TabsList className="mb-4 flex flex-wrap">
-            <TabsTrigger value="all">All Commodities</TabsTrigger>
-            <TabsTrigger value={CommodityCategory.Energy}>Energy</TabsTrigger>
-            <TabsTrigger value={CommodityCategory.Metals}>Metals</TabsTrigger>
-            <TabsTrigger value={CommodityCategory.Agriculture}>Agriculture</TabsTrigger>
-            <TabsTrigger value={CommodityCategory.Livestock}>Livestock</TabsTrigger>
-            <TabsTrigger value={CommodityCategory.Softs}>Softs</TabsTrigger>
-            <TabsTrigger value={CommodityCategory.Indices}>Indices</TabsTrigger>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1 space-y-6">
+            <WalletConnection />
+            <ArbitrageOpportunities />
+          </div>
+          <div className="lg:col-span-2">
+            <OracleStatus oracle={{
+              id: "synthetic-oracle",
+              commodityId: "synthetic",
+              latestPrice: 0,
+              lastUpdated: new Date().toISOString(),
+              nextUpdateTime: new Date(Date.now() + 60000).toISOString(),
+              status: "Active" as any,
+              network: "Multi-Chain",
+              address: "0x...",
+              transactions: []
+            }} />
+          </div>
+        </div>
+
+        <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full mt-6">
+          <TabsList className="grid w-full grid-cols-7">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="energy">Energy</TabsTrigger>
+            <TabsTrigger value="metals">Metals</TabsTrigger>
+            <TabsTrigger value="agriculture">Agriculture</TabsTrigger>
+            <TabsTrigger value="livestock">Livestock</TabsTrigger>
+            <TabsTrigger value="softs">Softs</TabsTrigger>
+            <TabsTrigger value="tradeable">Tradeable</TabsTrigger>
           </TabsList>
 
-          <TabsContent value={selectedCategory} className="mt-0">
+          <TabsContent value={selectedCategory} className="space-y-6">
             {isLoading ? (
-              <div className="flex h-60 items-center justify-center">
-                <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="bg-muted h-48 rounded-lg"></div>
+                  </div>
+                ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {commodities.map((commodity) => (
-                  <PriceCard key={commodity.id} commodity={commodity} />
-                ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {commodities
+                  .filter(commodity => {
+                    if (selectedCategory === "tradeable") {
+                      return tradingPairs.some(pair => 
+                        pair.ticker === commodity.ticker
+                      );
+                    }
+                    return true;
+                  })
+                  .map((commodity) => {
+                    const tradingPair = tradingPairs.find(pair => 
+                      pair.ticker === commodity.ticker
+                    );
+                    
+                    return (
+                      <TradingCard 
+                        key={commodity.id} 
+                        commodity={commodity}
+                        tradingPair={tradingPair}
+                        showDetails={false}
+                      />
+                    );
+                  })}
               </div>
             )}
           </TabsContent>
