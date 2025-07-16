@@ -99,22 +99,22 @@ export class DEXService {
         return [];
       }
 
-      return data.map(row => ({
-        baseTokenId: row.base_token_id,
-        baseSymbol: row.base_symbol,
-        baseName: row.base_name,
-        ticker: row.ticker,
-        blockchain: row.blockchain,
-        contractAddress: row.contract_address,
-        aerodromePoolAddress: row.aerodrome_pool_address,
-        jupiterMintAddress: row.jupiter_mint_address,
-        liquidityUsd: parseFloat(row.liquidity_usd?.toString() || "0"),
-        dailyVolumeUsd: parseFloat(row.daily_volume_usd?.toString() || "0"),
-        isActive: row.is_active,
-        pairTokenId: row.pair_token_id,
-        pairSymbol: row.pair_symbol,
-        pairBlockchain: row.pair_blockchain,
-        pairContractAddress: row.pair_contract_address
+      return (data || []).map(row => ({
+        baseTokenId: row.base_token_id || "",
+        baseSymbol: row.base_symbol || "",
+        baseName: row.base_name || "",
+        ticker: row.ticker || "",
+        blockchain: row.blockchain || "base",
+        contractAddress: row.contract_address || "",
+        aerodromePoolAddress: row.aerodrome_pool_address || null,
+        jupiterMintAddress: row.jupiter_mint_address || null,
+        liquidityUsd: parseFloat((row.liquidity_usd || 0).toString()),
+        dailyVolumeUsd: parseFloat((row.daily_volume_usd || 0).toString()),
+        isActive: row.is_active ?? true,
+        pairTokenId: row.pair_token_id || null,
+        pairSymbol: row.pair_symbol || null,
+        pairBlockchain: row.pair_blockchain || null,
+        pairContractAddress: row.pair_contract_address || null
       }));
     } catch (error) {
       console.error("Error in getTradingPairs:", error);
@@ -195,8 +195,10 @@ export class DEXService {
 
     // Group pairs by ticker
     const pairsByTicker = pairs.reduce((acc, pair) => {
-      if (!acc[pair.ticker]) acc[pair.ticker] = [];
-      acc[pair.ticker].push(pair);
+      const ticker = pair.ticker;
+      if (!ticker) return acc;
+      if (!acc[ticker]) acc[ticker] = [];
+      acc[ticker].push(pair);
       return acc;
     }, {} as Record<string, DEXTradingPair[]>);
 

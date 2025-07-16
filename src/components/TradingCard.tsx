@@ -34,7 +34,7 @@ export const TradingCard = ({ commodity, tradingPair, showDetails = false }: Tra
   // Determine if trading is available
   const hasBaseContract = tradingPair?.blockchain === "base" && tradingPair?.contractAddress;
   const hasSolanaContract = tradingPair?.blockchain === "solana" && tradingPair?.contractAddress;
-  const canTrade = hasBaseContract || hasSolanaContract;
+  const canTrade = Boolean(hasBaseContract || hasSolanaContract);
 
   // Format large numbers
   const formatLargeNumber = (num: number): string => {
