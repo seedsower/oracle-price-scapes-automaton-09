@@ -46,7 +46,7 @@ export const ArbitrageOpportunities = () => {
 
   if (opportunities.length === 0 && !isLoading) {
     return (
-      <Card>
+      <Card className="h-full min-h-[350px] flex flex-col">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             Cross-Chain Arbitrage
@@ -55,8 +55,8 @@ export const ArbitrageOpportunities = () => {
             </Button>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground text-center py-8">
+        <CardContent className="flex-1 flex items-center justify-center">
+          <p className="text-muted-foreground text-center">
             No significant arbitrage opportunities found at the moment.
           </p>
         </CardContent>
@@ -65,10 +65,10 @@ export const ArbitrageOpportunities = () => {
   }
 
   return (
-    <Card>
+    <Card className="h-full min-h-[350px] flex flex-col">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Cross-Chain Arbitrage Opportunities</CardTitle>
+          <CardTitle>Cross-Chain Arbitrage</CardTitle>
           <Button 
             variant="outline" 
             size="sm" 
@@ -79,11 +79,11 @@ export const ArbitrageOpportunities = () => {
           </Button>
         </div>
         <p className="text-sm text-muted-foreground">
-          Price differences between Base and Solana markets
+          Price differences between Base and Solana
         </p>
       </CardHeader>
       
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 flex-1 overflow-y-auto">
         {opportunities.map((opportunity, index) => (
           <div key={`${opportunity.ticker}-${index}`} className="space-y-3">
             <div className="flex items-center justify-between">

@@ -154,11 +154,13 @@ const Index = () => {
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-6 min-h-[400px]">
             <WalletConnection />
-            <ArbitrageOpportunities />
+            <div className="flex-1">
+              <ArbitrageOpportunities />
+            </div>
           </div>
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 min-h-[400px]">
             <OracleStatus oracle={{
               id: "synthetic-oracle",
               commodityId: "synthetic",
@@ -174,13 +176,14 @@ const Index = () => {
         </div>
 
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full mt-6">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="energy">Energy</TabsTrigger>
-            <TabsTrigger value="metals">Metals</TabsTrigger>
-            <TabsTrigger value="agriculture">Agriculture</TabsTrigger>
-            <TabsTrigger value="livestock">Livestock</TabsTrigger>
-            <TabsTrigger value="softs">Softs</TabsTrigger>
+            <TabsTrigger value="Energy">Energy</TabsTrigger>
+            <TabsTrigger value="Metals">Metals</TabsTrigger>
+            <TabsTrigger value="Agriculture">Agriculture</TabsTrigger>
+            <TabsTrigger value="Livestock">Livestock</TabsTrigger>
+            <TabsTrigger value="Softs">Softs</TabsTrigger>
+            <TabsTrigger value="Indices">Indices</TabsTrigger>
             <TabsTrigger value="tradeable">Tradeable</TabsTrigger>
           </TabsList>
 
